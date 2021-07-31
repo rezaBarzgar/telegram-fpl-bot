@@ -44,7 +44,7 @@ def player_stats(update, context):
     player_name = utils.strip_accents(player_name).lower()
     data = STATS[STATS.web_name == player_name].reset_index()
     if data.shape[0] >= 2:
-        response_message = "MORE THAN 1 PLAYER FOUND!\n" + SPLITTER
+        response_message = "MORE THAN 1 PLAYER FOUND!\n" + SPLITTER + '\n'
         for index, row in data.iterrows():
             temp = f"first name: {row.first_name}\n" \
                    f"last name : {row.second_name}\n" \
