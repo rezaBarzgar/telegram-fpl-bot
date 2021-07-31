@@ -41,7 +41,7 @@ def player_stats(update, context):
     # TODO tashaboh esmi ha handle nashude
     player_name = ' '.join(context.args)
     player_name = utils.strip_accents(player_name).lower()
-    data = STATS[STATS.web_name == player_name]
+    data = STATS[(STATS.web_name.str.contains(player_name)) & (STATS.first_name.str.contains(player_name))]
     response_message = f"first name: {data.first_name.item()}\n" \
                        f"last name : {data.second_name.item()}\n" \
                        f"cost : {data.now_cost.item() / 10}\n" \
