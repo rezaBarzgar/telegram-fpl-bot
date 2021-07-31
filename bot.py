@@ -46,14 +46,14 @@ def player_stats(update, context):
     if data.shape[0] >= 2:
         response_message = "MORE THAN 1 PLAYER FOUND!\n" + SPLITTER
         for index, row in data.iterrows():
-            temp = f"first name: {row.first_name.item()}\n" \
-                   f"last name : {row.second_name.item()}\n" \
-                   f"cost : {row.now_cost.item() / 10}\n" \
-                   f"form : {row.form.item()}\n" \
-                   f"position : {row.element_type.item()}\n" \
-                   f"team : {row.team.item()}\n" \
-                   f"total points : {row.total_points.item()}\n" \
-                   f"points per game : {row.points_per_game.item()}\n"
+            temp = f"first name: {row.first_name}\n" \
+                   f"last name : {row.second_name}\n" \
+                   f"cost : {row.now_cost / 10}\n" \
+                   f"form : {row.form}\n" \
+                   f"position : {row.element_type}\n" \
+                   f"team : {row.team}\n" \
+                   f"total points : {row.total_points}\n" \
+                   f"points per game : {row.points_per_game}\n"
             response_message = response_message + temp + SPLITTER + '\n'
         response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     else:
