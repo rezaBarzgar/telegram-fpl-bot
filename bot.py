@@ -9,6 +9,7 @@ import utils
 import pandas as pd
 
 #  -------------------- START ------------------------------------
+SPLITTER = 40 * '~'
 STATS = None
 LAST_STATS_UPDATE = datetime.datetime.now()
 updater = Updater(token='1765909251:AAGX1_LCh8IxCFishKKw3G20Oyl4x5EYqMA', use_context=True)
@@ -41,32 +42,46 @@ def player_stats(update, context):
     # TODO tashaboh esmi ha handle nashude
     player_name = ' '.join(context.args)
     player_name = utils.strip_accents(player_name).lower()
-    data = STATS[STATS.web_name == player_name]
-    response_message = f"first name: {data.first_name.item()}\n" \
-                       f"last name : {data.second_name.item()}\n" \
-                       f"cost : {data.now_cost.item() / 10}\n" \
-                       f"form : {data.form.item()}\n" \
-                       f"position : {data.element_type.item()}\n" \
-                       f"team : {data.team.item()}\n" \
-                       f"total points : {data.total_points.item()}\n" \
-                       f"points per game : {data.points_per_game.item()}\n" \
-                       f"GW transfer in : {data.transfers_in_event.item()}\n" \
-                       f"GW transfer out : {data.transfers_out_event.item()}\n" \
-                       f"bonus : {data.bonus.item()}\n" \
-                       f"ict_index: {data.ict_index.item()}\n" \
-                       f"ict_index_rank : {data.ict_index_rank.item()}\n" \
-                       f"minutes : {data.minutes.item()}\n" \
-                       f"goals scored : {data.goals_scored.item()}\n" \
-                       f"assists : {data.assists.item()}\n" \
-                       f"clean sheets : {data.clean_sheets.item()}\n" \
-                       f"goals conceded : {data.goals_conceded.item()}\n" \
-                       f"own_goals : {data.own_goals.item()}\n" \
-                       f"penalties saved : {data.penalties_saved.item()}\n" \
-                       f"penalties missed : {data.penalties_missed.item()}\n" \
-                       f"yellow cards : {data.yellow_cards.item()}\n" \
-                       f"red cards : {data.red_cards.item()}\n" \
-                       f"saves : {data.saves.item()}\n" \
-                       f"@FPL_TALK \n@persian_fpl_talk_bot"
+    data = STATS[STATS.web_name == player_name].reset_index()
+    if data.shape[0] >= 2:
+        response_message = "MORE THAN 1 PLAYER FOUND!\n" + SPLITTER
+        for index, row in data.iterrows():
+            temp = f"first name: {row.first_name.item()}\n" \
+                   f"last name : {row.second_name.item()}\n" \
+                   f"cost : {row.now_cost.item() / 10}\n" \
+                   f"form : {row.form.item()}\n" \
+                   f"position : {row.element_type.item()}\n" \
+                   f"team : {row.team.item()}\n" \
+                   f"total points : {row.total_points.item()}\n" \
+                   f"points per game : {row.points_per_game.item()}\n"
+            response_message = response_message + temp + SPLITTER + '\n'
+        response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
+    else:
+        response_message = f"first name: {data.first_name.item()}\n" \
+                           f"last name : {data.second_name.item()}\n" \
+                           f"cost : {data.now_cost.item() / 10}\n" \
+                           f"form : {data.form.item()}\n" \
+                           f"position : {data.element_type.item()}\n" \
+                           f"team : {data.team.item()}\n" \
+                           f"total points : {data.total_points.item()}\n" \
+                           f"points per game : {data.points_per_game.item()}\n" \
+                           f"GW transfer in : {data.transfers_in_event.item()}\n" \
+                           f"GW transfer out : {data.transfers_out_event.item()}\n" \
+                           f"bonus : {data.bonus.item()}\n" \
+                           f"ict_index: {data.ict_index.item()}\n" \
+                           f"ict_index_rank : {data.ict_index_rank.item()}\n" \
+                           f"minutes : {data.minutes.item()}\n" \
+                           f"goals scored : {data.goals_scored.item()}\n" \
+                           f"assists : {data.assists.item()}\n" \
+                           f"clean sheets : {data.clean_sheets.item()}\n" \
+                           f"goals conceded : {data.goals_conceded.item()}\n" \
+                           f"own_goals : {data.own_goals.item()}\n" \
+                           f"penalties saved : {data.penalties_saved.item()}\n" \
+                           f"penalties missed : {data.penalties_missed.item()}\n" \
+                           f"yellow cards : {data.yellow_cards.item()}\n" \
+                           f"red cards : {data.red_cards.item()}\n" \
+                           f"saves : {data.saves.item()}\n" \
+                           f"@FPL_TALK \n@persian_fpl_talk_bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
@@ -80,7 +95,7 @@ def popular_players(update, context):
     for index, row in df.iterrows():
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"position: {row.element_type}   team: {row.team}\n"
-        response_message = response_message + temp + 20 * '~' + '\n'
+        response_message = response_message + temp + SPLITTER + '\n'
     response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
@@ -96,7 +111,7 @@ def popular_forwards(update, context):
     for index, row in df.iterrows():
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"team: {row.team}\n"
-        response_message = response_message + temp + 20 * '~' + '\n'
+        response_message = response_message + temp + SPLITTER + '\n'
     response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
@@ -113,7 +128,7 @@ def popular_midfielders(update, context):
     for index, row in df.iterrows():
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"team: {row.team}\n"
-        response_message = response_message + temp + 20 * '~' + '\n'
+        response_message = response_message + temp + SPLITTER + '\n'
     response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
@@ -130,7 +145,7 @@ def popular_defenders(update, context):
     for index, row in df.iterrows():
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"team: {row.team}\n"
-        response_message = response_message + temp + 20 * '~' + '\n'
+        response_message = response_message + temp + SPLITTER + '\n'
     response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
@@ -147,7 +162,7 @@ def popular_goalkeepers(update, context):
     for index, row in df.iterrows():
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"team: {row.team}\n"
-        response_message = response_message + temp + 20 * '~' + '\n'
+        response_message = response_message + temp + SPLITTER + '\n'
     response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
