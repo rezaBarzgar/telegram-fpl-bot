@@ -9,6 +9,9 @@ import utils
 import pandas as pd
 
 #  -------------------- START ------------------------------------
+sts = statistics.Statistics()
+teams_dict = sts.get_teams()
+TEAMS_TO_STRING = ''
 SPLITTER = 40 * '~'
 STATS = None
 LAST_STATS_UPDATE = datetime.datetime.now()
@@ -22,13 +25,18 @@ job_queue = updater.job_queue
 #  -------------------- FUNCTIONS --------------------------------
 def stats_updater(update='', context=''):
     try:
-        sts = statistics.Statistics()
         global STATS
         STATS = pd.DataFrame(sts.update_statistics())
         global LAST_STATS_UPDATE
         LAST_STATS_UPDATE = datetime.datetime.now()
     except ConnectionError:
         print(f"unable to get data from premier league api at {datetime.datetime.now()}")
+
+
+def teams_to_string():
+    global TEAMS_TO_STRING
+    for key, value in teams_dict.items():
+        TEAMS_TO_STRING += f"{value.lower()}\n"
 
 
 job_queue.run_repeating(callback=stats_updater, interval=1800, first=5.0)
@@ -57,6 +65,7 @@ def player_stats(update, context):
             response_message = response_message + temp + SPLITTER + '\n'
         response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     else:
+        # TODO show next games
         response_message = f"first name: {data.first_name.item()}\n" \
                            f"last name : {data.second_name.item()}\n" \
                            f"cost : {data.now_cost.item() / 10}\n" \
@@ -167,6 +176,17 @@ def popular_goalkeepers(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
+def next_games(update, context):
+    if TEAMS_TO_STRING == '':
+        teams_to_string()
+    team = ' '.join(context.args)
+    if team in teams_dict.values():
+        response = sts.get_next_games(team)
+    else:
+        response = 'your input must be one of the following names:\n' + TEAMS_TO_STRING + '@FPL_TALK\n@persian_fpl_talk_bot'
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+
+
 def echo(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
 
@@ -195,6 +215,9 @@ dispatcher.add_handler(popular_midfielders_handler)
 
 popular_defenders_handler = CommandHandler('popular_defenders', popular_defenders)
 dispatcher.add_handler(popular_defenders_handler)
+
+next_games_handler = CommandHandler('next_games', next_games)
+dispatcher.add_handler(next_games_handler)
 
 popular_goalkeepers_handler = CommandHandler('popular_goalkeepers', popular_goalkeepers)
 dispatcher.add_handler(popular_goalkeepers_handler)

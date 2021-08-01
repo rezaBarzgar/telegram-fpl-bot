@@ -81,7 +81,8 @@ import utils
 class Statistics:
     def __init__(self):
         self.base_urls = ['https://fantasy.premierleague.com/api/bootstrap-static/',
-                          'https://fantasy.premierleague.com/api/element-summary/']
+                          'https://fantasy.premierleague.com/api/element-summary/',
+                          'https://fantasy.premierleague.com/api/fixtures/']
         self.necessary_statistics = [
             'dreamteam_count',
             'element_type',
@@ -117,6 +118,37 @@ class Statistics:
             'ict_index_rank',
         ]
 
+    def get_next_games(self, team):
+        output = f"{team} next games:\n"
+        req = requests.get(self.base_urls[0])
+        teams_dict = self.__get_teams_name(req)
+        req = requests.get(self.base_urls[2])
+        data = req.json()
+        id = 0
+        event = self.get_current_gw()
+        for key, value in teams_dict.items():
+            if value == team:
+                id = int(key)
+                break
+        for item in data:
+            if event < int(item['event']) <= event + 5:
+                if item['team_a'] == id:
+                    output = output + teams_dict[str(item['team_h'])] + ' (away)\n'
+                if item['team_h'] == id:
+                    output = output + teams_dict[str(item['team_a'])] + ' (home)\n'
+        output += "@FPL_TALK\n@persian_fpl_talk_bot"
+        return output
+
+    def get_current_gw(self):
+        current = 0
+        req = requests.get(self.base_urls[0])
+        print('received')
+        data = req.json()['events']
+        for item in data:
+            if item['is_current']:
+                current = item['id']
+        return current
+
     def update_statistics(self):
         # TODO chand ta az value ha bayad az str tabdil be int beshe
         req = requests.get(self.base_urls[0])
@@ -138,6 +170,10 @@ class Statistics:
             output.append(temp)
         return output
 
+    def get_teams(self):
+        req = requests.get(self.base_urls[0])
+        return self.__get_teams_name(req)
+
     def __get_teams_name(self, req):
         data = req.json()['teams']
         output = {}
@@ -155,9 +191,11 @@ class Statistics:
 
 if __name__ == '__main__':
     sts = Statistics()
-    df = pd.DataFrame(sts.update_statistics())
-    # print(type(df[df.web_name == 'salah'].selected_by_percent.item()))
-    df = df.sort_values(by=['selected_by_percent'], ascending=False)
-    df = df[df.element_type == 'Midfielder'].head().reset_index()
-    for index, row in df.iterrows():
-        print(f'player {index}: {row.web_name}')
+    # -----------------------------------------------
+    # df = pd.DataFrame(sts.update_statistics())
+    # df = df.sort_values(by=['selected_by_percent'], ascending=False)
+    # df = df[df.element_type == 'Midfielder'].head().reset_index()
+    # for index, row in df.iterrows():
+    #     print(f'player {index}: {row.web_name}')
+    # -----------------------------------------------
+    print(sts.get_next_games('Chelsea'))
