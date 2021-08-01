@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 
 import utils
+
 SPLITTER = 30 * '~'
 """EXAMPLE OF AN ELEMENT's DATA
 
@@ -119,7 +120,8 @@ class Statistics:
         ]
 
     def get_next_games(self, team):
-        output = f"{team} next games:\n"+ SPLITTER + "\n"
+        difficulty = 0
+        output = f"{team} next games:\n" + SPLITTER + "\n"
         req = requests.get(self.base_urls[0])
         teams_dict = self.__get_teams_name(req)
         for key, value in teams_dict.items():
@@ -136,8 +138,11 @@ class Statistics:
             if event < int(item['event']) <= event + 5:
                 if item['team_a'] == id:
                     output = output + teams_dict[str(item['team_h'])] + f" GW{item['event']}" + ' (away)\n'
+                    difficulty += 1.5 * int(item['team_h_difficulty'])
                 if item['team_h'] == id:
                     output = output + teams_dict[str(item['team_a'])] + f" GW{item['event']}" + ' (home)\n'
+                    difficulty += int(item['team_a_difficulty'])
+        output += f"difficulty: {difficulty}"
         output += "@FPL_TALK\n@persian_fpl_talk_bot"
         return output
 
