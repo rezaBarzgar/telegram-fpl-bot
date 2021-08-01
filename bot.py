@@ -244,6 +244,27 @@ def easy_matches(update, context):
     response += CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
+
+def hard_matches(update, context):
+    if len(context.args) == 0:
+        count = 5
+    else:
+        count = ''.join(context.args)
+    if not 1 <= count <= 20:
+        response = "wrong input!\nInput must be in a number between 1 and 20."
+        context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+        return
+    difficulties = pd.DataFrame(sts.calculate_difficulties())
+    difficulties.columns = ['team', 'difficulty']
+    difficulties = difficulties.sort_values(by=['difficulty'], ascending=False).head(count).reset_index()
+    response = ""
+    for index, row in difficulties.iterrows():
+        response += f"{row.team} difficulty: {row.difficulty}\n\n" \
+                    f"{sts.get_next_games(row.team)}\n" + SPLITTER + '\n'
+    response += CHANNEL_AND_BOT_ID
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+
+
 def echo(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
 
@@ -276,11 +297,14 @@ dispatcher.add_handler(popular_defenders_handler)
 next_games_handler = CommandHandler('next_games', next_games)
 dispatcher.add_handler(next_games_handler)
 
+popular_goalkeepers_handler = CommandHandler('popular_goalkeepers', popular_goalkeepers)
+dispatcher.add_handler(popular_goalkeepers_handler)
+
 easy_matches_handler = CommandHandler('easy_matches', easy_matches)
 dispatcher.add_handler(easy_matches_handler)
 
-popular_goalkeepers_handler = CommandHandler('popular_goalkeepers', popular_goalkeepers)
-dispatcher.add_handler(popular_goalkeepers_handler)
+hard_matches_handler = CommandHandler('hard_matches', hard_matches)
+dispatcher.add_handler(hard_matches_handler)
 
 start_handler = CommandHandler('start', hello)
 dispatcher.add_handler(start_handler)
