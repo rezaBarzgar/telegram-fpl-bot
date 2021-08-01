@@ -157,7 +157,7 @@ class Statistics:
             for item in data:
                 if event < int(item['event']) <= event + 5:
                     if item['team_a'] == id:
-                        diffculity += 1.5 * int(item['team_h_difficulty'])
+                        diffculity += 1.2 * int(item['team_h_difficulty'])
                     if item['team_h'] == id:
                         diffculity += int(item['team_a_difficulty'])
             difficulties.append((value, diffculity))

@@ -239,8 +239,8 @@ def easy_matches(update, context):
     difficulties = difficulties.sort_values(by=['difficulty']).head(count).reset_index()
     response = ""
     for index, row in difficulties.iterrows():
-        response += f"{row.team} difficulty: {row.difficulty}\n" \
-                    f"{sts.get_next_games(row.team)}\n" + SPLITTER
+        response += f"{row.team} difficulty: {row.difficulty}\n\n" \
+                    f"{sts.get_next_games(row.team)}\n" + SPLITTER + '\n'
     response += CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
