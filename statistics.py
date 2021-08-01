@@ -122,6 +122,8 @@ class Statistics:
         output = f"{team} next games:\n"
         req = requests.get(self.base_urls[0])
         teams_dict = self.__get_teams_name(req)
+        for key, value in teams_dict.items():
+            teams_dict[key] = value.lower()
         req = requests.get(self.base_urls[2])
         data = req.json()
         id = 0
