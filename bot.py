@@ -15,6 +15,7 @@ for key, value in teams_dict.items():
     teams_dict[key] = value.lower()
 TEAMS_TO_STRING = ''
 SPLITTER = 30 * '~'
+CHANNEL_AND_BOT_ID = '@FPL_TALK\n@persian_fpl_talk_bot'
 STATS = None
 LAST_STATS_UPDATE = datetime.datetime.now()
 updater = Updater(token='1765909251:AAGX1_LCh8IxCFishKKw3G20Oyl4x5EYqMA', use_context=True)
@@ -97,7 +98,7 @@ def player_stats(update, context):
                    f"assists : {row.assists}\n" \
                    f"clean sheets : {row.clean_sheets}\n"
             response_message = response_message + temp + SPLITTER + '\n'
-        response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
+        response_message = response_message + CHANNEL_AND_BOT_ID
     else:
         response_message = f"first name: {data.first_name.item()}\n" \
                            f"last name : {data.second_name.item()}\n" \
@@ -123,7 +124,9 @@ def player_stats(update, context):
                            f"yellow cards : {data.yellow_cards.item()}\n" \
                            f"red cards : {data.red_cards.item()}\n" \
                            f"saves : {data.saves.item()}\n" + SPLITTER + "\n" \
-                           f"{sts.get_next_games(data.team.item().lower())}"
+                                                                         f"{data.team.item().lower()} next games:\n" + SPLITTER + "\n" + sts.get_next_games(
+            data.team.item().lower()) + CHANNEL_AND_BOT_ID
+
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
@@ -138,7 +141,7 @@ def popular_players(update, context):
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"position: {row.element_type}   team: {row.team}\n"
         response_message = response_message + temp + SPLITTER + '\n'
-    response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
+    response_message = response_message + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
@@ -154,7 +157,7 @@ def popular_forwards(update, context):
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"team: {row.team}\n"
         response_message = response_message + temp + SPLITTER + '\n'
-    response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
+    response_message = response_message + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
@@ -171,7 +174,7 @@ def popular_midfielders(update, context):
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"team: {row.team}\n"
         response_message = response_message + temp + SPLITTER + '\n'
-    response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
+    response_message = response_message + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
@@ -188,7 +191,7 @@ def popular_defenders(update, context):
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"team: {row.team}\n"
         response_message = response_message + temp + SPLITTER + '\n'
-    response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
+    response_message = response_message + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
@@ -205,7 +208,7 @@ def popular_goalkeepers(update, context):
         temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
                f"team: {row.team}\n"
         response_message = response_message + temp + SPLITTER + '\n'
-    response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
+    response_message = response_message + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
@@ -214,10 +217,31 @@ def next_games(update, context):
         teams_to_string()
     team = ' '.join(context.args)
     if team in teams_dict.values():
-        response = sts.get_next_games(team)
+        response = f"{team} next games:\n" + SPLITTER + "\n" + sts.get_next_games(
+            team) + CHANNEL_AND_BOT_ID
     else:
-        response = 'your input must be one of the following names:\n' + TEAMS_TO_STRING + '@FPL_TALK\n@persian_fpl_talk_bot'
+        response = 'your input must be one of the following names:\n' + TEAMS_TO_STRING + \
+                   CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+
+
+def easy_matches(update, context):
+    if len(context.args) == 0:
+        count = 5
+    else:
+        count = ''.join(context.args)
+    if not 1 <= count <= 20:
+        response = "wrong input!\nInput must be in a number between 1 and 20."
+        context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+        return
+    difficulties = pd.DataFrame(sts.calculate_difficulties())
+    difficulties.columns = ['team', 'difficulty']
+    difficulties = difficulties.sort_values(by=['difficulty']).head(count).reset_index()
+    response = ""
+    for index, row in difficulties.iterrows():
+        response += f"{row.team} difficulty: {row.difficulty}\n" \
+                    f"{sts.get_next_games(row.team)}\n" + SPLITTER
+    response += CHANNEL_AND_BOT_ID
 
 
 def echo(update, context):
@@ -251,6 +275,9 @@ dispatcher.add_handler(popular_defenders_handler)
 
 next_games_handler = CommandHandler('next_games', next_games)
 dispatcher.add_handler(next_games_handler)
+
+easy_matches_handler = CommandHandler('easy_matches', easy_matches)
+dispatcher.add_handler(easy_matches_handler)
 
 popular_goalkeepers_handler = CommandHandler('popular_goalkeepers', popular_goalkeepers)
 dispatcher.add_handler(popular_goalkeepers_handler)

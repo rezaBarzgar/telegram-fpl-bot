@@ -120,8 +120,7 @@ class Statistics:
         ]
 
     def get_next_games(self, team):
-        difficulty = 0
-        output = f"{team} next games:\n" + SPLITTER + "\n"
+        # output = f"{team} next games:\n" + SPLITTER + "\n"
         req = requests.get(self.base_urls[0])
         teams_dict = self.__get_teams_name(req)
         for key, value in teams_dict.items():
@@ -138,13 +137,31 @@ class Statistics:
             if event < int(item['event']) <= event + 5:
                 if item['team_a'] == id:
                     output = output + teams_dict[str(item['team_h'])] + f" GW{item['event']}" + ' (away)\n'
-                    difficulty += 1.5 * int(item['team_h_difficulty'])
                 if item['team_h'] == id:
                     output = output + teams_dict[str(item['team_a'])] + f" GW{item['event']}" + ' (home)\n'
-                    difficulty += int(item['team_a_difficulty'])
-        output += f"difficulty: {difficulty}"
-        output += "@FPL_TALK\n@persian_fpl_talk_bot"
+        # output += "@FPL_TALK\n@persian_fpl_talk_bot"
         return output
+
+    def calculate_difficulties(self):
+        difficulties = {}
+        req = requests.get(self.base_urls[0])
+        teams_dict = self.__get_teams_name(req)
+        for key, value in teams_dict.items():
+            teams_dict[key] = value.lower()
+        req = requests.get(self.base_urls[2])
+        data = req.json()
+        event = self.get_current_gw()
+        for key, value in teams_dict.items():
+            id = int(key)
+            diffculity=0
+            for item in data:
+                if event < int(item['event']) <= event + 5:
+                    if item['team_a'] == id:
+                        diffculity += 1.5 * int(item['team_h_difficulty'])
+                    if item['team_h'] == id:
+                        diffculity += int(item['team_a_difficulty'])
+            difficulties[value] = diffculity
+        return difficulties
 
     def get_current_gw(self):
         current = 0
@@ -199,10 +216,10 @@ class Statistics:
 if __name__ == '__main__':
     sts = Statistics()
     # -----------------------------------------------
-    df = pd.DataFrame(sts.update_statistics())
-    print(df.columns)
+    # df = pd.DataFrame(sts.update_statistics())
+    # print(df.columns)
     # df = df[df.element_type == 'Midfielder'].head().reset_index()
     # for index, row in df.iterrows():
     #     print(f'player {index}: {row.web_name}')
     # -----------------------------------------------
-    # print(sts.get_next_games('Chelsea'))
+    print(sts.calculate_difficulties())
