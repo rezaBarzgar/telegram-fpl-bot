@@ -114,8 +114,7 @@ def player_stats(update, context):
                            f"yellow cards : {data.yellow_cards.item()}\n" \
                            f"red cards : {data.red_cards.item()}\n" \
                            f"saves : {data.saves.item()}\n"+SPLITTER+"\n" \
-                           f"{sts.get_next_games(data.team.item().lower())}" \
-                           f"@FPL_TALK \n@persian_fpl_talk_bot"
+                           f"{sts.get_next_games(data.team.item().lower())}"
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
