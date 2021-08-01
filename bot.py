@@ -87,15 +87,15 @@ def player_stats(update, context):
                    f"team : {row.team}\n" \
                    f"total points : {row.total_points}\n" \
                    f"points per game : {row.points_per_game}\n" \
-                   f"GW transfer in : {row.transfers_in_event.item()}\n" \
-                   f"GW transfer out : {row.transfers_out_event.item()}\n" \
-                   f"bonus : {row.bonus.item()}\n" \
-                   f"ict_index: {row.ict_index.item()}\n" \
-                   f"ict_index_rank : {row.ict_index_rank.item()}\n" \
-                   f"minutes : {row.minutes.item()}\n" \
-                   f"goals scored : {row.goals_scored.item()}\n" \
-                   f"assists : {row.assists.item()}\n" \
-                   f"clean sheets : {row.clean_sheets.item()}\n"
+                   f"GW transfer in : {row.transfers_in_event}\n" \
+                   f"GW transfer out : {row.transfers_out_event}\n" \
+                   f"bonus : {row.bonus}\n" \
+                   f"ict_index: {row.ict_index}\n" \
+                   f"ict_index_rank : {row.ict_index_rank}\n" \
+                   f"minutes : {row.minutes}\n" \
+                   f"goals scored : {row.goals_scored}\n" \
+                   f"assists : {row.assists}\n" \
+                   f"clean sheets : {row.clean_sheets}\n"
             response_message = response_message + temp + SPLITTER + '\n'
         response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     else:
