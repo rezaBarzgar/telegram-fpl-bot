@@ -143,7 +143,7 @@ class Statistics:
         return output
 
     def calculate_difficulties(self):
-        difficulties = {}
+        difficulties = []
         req = requests.get(self.base_urls[0])
         teams_dict = self.__get_teams_name(req)
         for key, value in teams_dict.items():
@@ -153,14 +153,14 @@ class Statistics:
         event = self.get_current_gw()
         for key, value in teams_dict.items():
             id = int(key)
-            diffculity=0
+            diffculity = 0
             for item in data:
                 if event < int(item['event']) <= event + 5:
                     if item['team_a'] == id:
                         diffculity += 1.5 * int(item['team_h_difficulty'])
                     if item['team_h'] == id:
                         diffculity += int(item['team_a_difficulty'])
-            difficulties[value] = diffculity
+            difficulties.append((value, diffculity))
         return difficulties
 
     def get_current_gw(self):
