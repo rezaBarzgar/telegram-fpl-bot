@@ -11,6 +11,8 @@ import pandas as pd
 #  -------------------- START ------------------------------------
 sts = statistics.Statistics()
 teams_dict = sts.get_teams()
+for key, value in teams_dict.items():
+    teams_dict[key] = value.lower()
 TEAMS_TO_STRING = ''
 SPLITTER = 40 * '~'
 STATS = None
@@ -180,7 +182,7 @@ def next_games(update, context):
     if TEAMS_TO_STRING == '':
         teams_to_string()
     team = ' '.join(context.args)
-    if team in teams_dict.values():
+    if team in teams_dict.values().lower():
         response = sts.get_next_games(team)
     else:
         response = 'your input must be one of the following names:\n' + TEAMS_TO_STRING + '@FPL_TALK\n@persian_fpl_talk_bot'
@@ -221,12 +223,6 @@ dispatcher.add_handler(next_games_handler)
 
 popular_goalkeepers_handler = CommandHandler('popular_goalkeepers', popular_goalkeepers)
 dispatcher.add_handler(popular_goalkeepers_handler)
-
-concat_handler = CommandHandler('concat', concat)
-dispatcher.add_handler(concat_handler)
-
-# echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
-# dispatcher.add_handler(echo_handler)
 
 start_handler = CommandHandler('start', hello)
 dispatcher.add_handler(start_handler)
