@@ -229,7 +229,7 @@ def easy_matches(update, context):
     if len(context.args) == 0:
         count = 5
     else:
-        count = ''.join(context.args)
+        count = int(''.join(context.args))
     if not 1 <= count <= 20:
         response = "wrong input!\nInput must be in a number between 1 and 20."
         context.bot.send_message(chat_id=update.effective_chat.id, text=response)
@@ -249,7 +249,7 @@ def hard_matches(update, context):
     if len(context.args) == 0:
         count = 5
     else:
-        count = ''.join(context.args)
+        count = int(''.join(context.args))
     if not 1 <= count <= 20:
         response = "wrong input!\nInput must be in a number between 1 and 20."
         context.bot.send_message(chat_id=update.effective_chat.id, text=response)
