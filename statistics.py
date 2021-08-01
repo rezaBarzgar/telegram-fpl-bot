@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 
 import utils
-
+SPLITTER = 30 * '~'
 """EXAMPLE OF AN ELEMENT's DATA
 
 
@@ -119,7 +119,7 @@ class Statistics:
         ]
 
     def get_next_games(self, team):
-        output = f"{team} next games:\n"
+        output = f"{team} next games:\n"+ SPLITTER + "\n"
         req = requests.get(self.base_urls[0])
         teams_dict = self.__get_teams_name(req)
         for key, value in teams_dict.items():
@@ -194,10 +194,10 @@ class Statistics:
 if __name__ == '__main__':
     sts = Statistics()
     # -----------------------------------------------
-    # df = pd.DataFrame(sts.update_statistics())
-    # df = df.sort_values(by=['selected_by_percent'], ascending=False)
+    df = pd.DataFrame(sts.update_statistics())
+    print(df.columns)
     # df = df[df.element_type == 'Midfielder'].head().reset_index()
     # for index, row in df.iterrows():
     #     print(f'player {index}: {row.web_name}')
     # -----------------------------------------------
-    print(sts.get_next_games('Chelsea'))
+    # print(sts.get_next_games('Chelsea'))

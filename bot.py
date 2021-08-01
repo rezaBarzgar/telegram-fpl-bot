@@ -14,7 +14,7 @@ teams_dict = sts.get_teams()
 for key, value in teams_dict.items():
     teams_dict[key] = value.lower()
 TEAMS_TO_STRING = ''
-SPLITTER = 40 * '~'
+SPLITTER = 30 * '~'
 STATS = None
 LAST_STATS_UPDATE = datetime.datetime.now()
 updater = Updater(token='1765909251:AAGX1_LCh8IxCFishKKw3G20Oyl4x5EYqMA', use_context=True)
@@ -29,6 +29,29 @@ def stats_updater(update='', context=''):
     try:
         global STATS
         STATS = pd.DataFrame(sts.update_statistics())
+        STATS['dreamteam_count'] = pd.to_numeric(STATS['dreamteam_count'])
+        STATS['ep_next'] = pd.to_numeric(STATS['ep_next'])
+        STATS['ep_this'] = pd.to_numeric(STATS['ep_this'])
+        STATS['event_points'] = pd.to_numeric(STATS['event_points'])
+        STATS['form'] = pd.to_numeric(STATS['form'])
+        STATS['now_cost'] = pd.to_numeric(STATS['now_cost'])
+        STATS['points_per_game'] = pd.to_numeric(STATS['points_per_game'])
+        STATS['transfers_in_event'] = pd.to_numeric(STATS['transfers_in_event'])
+        STATS['transfers_out_event'] = pd.to_numeric(STATS['transfers_out_event'])
+        STATS['minutes'] = pd.to_numeric(STATS['minutes'])
+        STATS['goals_scored'] = pd.to_numeric(STATS['goals_scored'])
+        STATS['assists'] = pd.to_numeric(STATS['assists'])
+        STATS['clean_sheets'] = pd.to_numeric(STATS['clean_sheets'])
+        STATS['goals_conceded'] = pd.to_numeric(STATS['goals_conceded'])
+        STATS['own_goals'] = pd.to_numeric(STATS['own_goals'])
+        STATS['penalties_saved'] = pd.to_numeric(STATS['penalties_saved'])
+        STATS['penalties_missed'] = pd.to_numeric(STATS['penalties_missed'])
+        STATS['yellow_cards'] = pd.to_numeric(STATS['yellow_cards'])
+        STATS['red_cards'] = pd.to_numeric(STATS['red_cards'])
+        STATS['saves'] = pd.to_numeric(STATS['saves'])
+        STATS['bonus'] = pd.to_numeric(STATS['bonus'])
+        STATS['ict_index'] = pd.to_numeric(STATS['ict_index'])
+        STATS['ict_index_rank'] = pd.to_numeric(STATS['ict_index_rank'])
         global LAST_STATS_UPDATE
         LAST_STATS_UPDATE = datetime.datetime.now()
     except ConnectionError:
@@ -67,7 +90,6 @@ def player_stats(update, context):
             response_message = response_message + temp + SPLITTER + '\n'
         response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     else:
-        # TODO show next games
         response_message = f"first name: {data.first_name.item()}\n" \
                            f"last name : {data.second_name.item()}\n" \
                            f"cost : {data.now_cost.item() / 10}\n" \
@@ -91,7 +113,8 @@ def player_stats(update, context):
                            f"penalties missed : {data.penalties_missed.item()}\n" \
                            f"yellow cards : {data.yellow_cards.item()}\n" \
                            f"red cards : {data.red_cards.item()}\n" \
-                           f"saves : {data.saves.item()}\n" \
+                           f"saves : {data.saves.item()}\n"+SPLITTER+"\n" \
+                           f"{sts.get_next_games(data.team.item().lower())}" \
                            f"@FPL_TALK \n@persian_fpl_talk_bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
