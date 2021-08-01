@@ -121,6 +121,7 @@ class Statistics:
 
     def get_next_games(self, team):
         # output = f"{team} next games:\n" + SPLITTER + "\n"
+        output = ""
         req = requests.get(self.base_urls[0])
         teams_dict = self.__get_teams_name(req)
         for key, value in teams_dict.items():
@@ -139,7 +140,6 @@ class Statistics:
                     output = output + teams_dict[str(item['team_h'])] + f" GW{item['event']}" + ' (away)\n'
                 if item['team_h'] == id:
                     output = output + teams_dict[str(item['team_a'])] + f" GW{item['event']}" + ' (home)\n'
-        output += ""
         return output
 
     def calculate_difficulties(self):
