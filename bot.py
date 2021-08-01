@@ -86,7 +86,16 @@ def player_stats(update, context):
                    f"position : {row.element_type}\n" \
                    f"team : {row.team}\n" \
                    f"total points : {row.total_points}\n" \
-                   f"points per game : {row.points_per_game}\n"
+                   f"points per game : {row.points_per_game}\n" \
+                   f"GW transfer in : {row.transfers_in_event.item()}\n" \
+                   f"GW transfer out : {row.transfers_out_event.item()}\n" \
+                   f"bonus : {row.bonus.item()}\n" \
+                   f"ict_index: {row.ict_index.item()}\n" \
+                   f"ict_index_rank : {row.ict_index_rank.item()}\n" \
+                   f"minutes : {row.minutes.item()}\n" \
+                   f"goals scored : {row.goals_scored.item()}\n" \
+                   f"assists : {row.assists.item()}\n" \
+                   f"clean sheets : {row.clean_sheets.item()}\n"
             response_message = response_message + temp + SPLITTER + '\n'
         response_message = response_message + "@FPL_TALK \n@persian_fpl_talk_bot"
     else:
@@ -113,7 +122,7 @@ def player_stats(update, context):
                            f"penalties missed : {data.penalties_missed.item()}\n" \
                            f"yellow cards : {data.yellow_cards.item()}\n" \
                            f"red cards : {data.red_cards.item()}\n" \
-                           f"saves : {data.saves.item()}\n"+SPLITTER+"\n" \
+                           f"saves : {data.saves.item()}\n" + SPLITTER + "\n" \
                            f"{sts.get_next_games(data.team.item().lower())}"
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
