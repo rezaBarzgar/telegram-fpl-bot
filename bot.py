@@ -242,7 +242,7 @@ def easy_matches(update, context):
         response += f"{row.team} difficulty: {row.difficulty}\n" \
                     f"{sts.get_next_games(row.team)}\n" + SPLITTER
     response += CHANNEL_AND_BOT_ID
-
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response)
 
 def echo(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
