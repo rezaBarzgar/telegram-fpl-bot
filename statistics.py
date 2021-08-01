@@ -135,9 +135,9 @@ class Statistics:
         for item in data:
             if event < int(item['event']) <= event + 5:
                 if item['team_a'] == id:
-                    output = output + teams_dict[str(item['team_h'])] + f"GW{item['event']}" + ' (away)\n'
+                    output = output + teams_dict[str(item['team_h'])] + f" GW{item['event']}" + ' (away)\n'
                 if item['team_h'] == id:
-                    output = output + teams_dict[str(item['team_a'])] + f"GW{item['event']}" + ' (home)\n'
+                    output = output + teams_dict[str(item['team_a'])] + f" GW{item['event']}" + ' (home)\n'
         output += "@FPL_TALK\n@persian_fpl_talk_bot"
         return output
 
