@@ -182,7 +182,7 @@ def next_games(update, context):
     if TEAMS_TO_STRING == '':
         teams_to_string()
     team = ' '.join(context.args)
-    if team in teams_dict.values().lower():
+    if team in teams_dict.values():
         response = sts.get_next_games(team)
     else:
         response = 'your input must be one of the following names:\n' + TEAMS_TO_STRING + '@FPL_TALK\n@persian_fpl_talk_bot'
