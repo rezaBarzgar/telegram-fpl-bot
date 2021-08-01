@@ -157,9 +157,9 @@ class Statistics:
             for item in data:
                 if event < int(item['event']) <= event + 5:
                     if item['team_a'] == id:
-                        diffculity += int(item['team_h_difficulty'])
+                        diffculity += 1.2 * int(item['team_a_difficulty'])
                     if item['team_h'] == id:
-                        diffculity += int(item['team_a_difficulty'])
+                        diffculity += int(item['team_h_difficulty'])
             difficulties.append((value, diffculity))
         return difficulties
 
@@ -176,7 +176,7 @@ class Statistics:
     def update_statistics(self):
         # TODO chand ta az value ha bayad az str tabdil be int beshe
         req = requests.get(self.base_urls[0])
-        print('received')
+        print('~~~~~~~~~~~~~~~STATS UPDATED!~~~~~~~~~~~~~~~~~~~~')
         data = req.json()['elements']
         teams_dict = self.__get_teams_name(req)
         elements_type_dict = self.__get_element_types(req)
