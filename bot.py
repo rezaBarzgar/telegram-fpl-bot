@@ -118,6 +118,9 @@ def player_stats(update, context):
     player_name = ' '.join(context.args)
     player_name = utils.strip_accents(player_name).lower()
     data = STATS[STATS.web_name == player_name].reset_index()
+    print("==================")
+    print(data.shape[0])
+    print("==================")
     if data.shape[0] >= 1:
         response_message = "sorry, I cannot find player with this name :("
     elif data.shape[0] >= 2:
