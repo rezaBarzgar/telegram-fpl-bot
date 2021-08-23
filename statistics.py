@@ -160,7 +160,7 @@ class Statistics:
                         diffculity += 1.2 * int(item['team_a_difficulty'])
                     if item['team_h'] == id:
                         diffculity += int(item['team_h_difficulty'])
-            difficulties.append((value, diffculity))
+            difficulties.append((value, float("{:.2f}".format(diffculity))))
         return difficulties
 
     def get_current_gw(self):

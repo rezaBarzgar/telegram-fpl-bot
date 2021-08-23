@@ -73,6 +73,38 @@ def hello(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="I'm FPL bot, talk to me!")
 
 
+def help(update, context):
+    message = """راهنمای استفاده از ربات Persian FPL Talk.
+دستور: /player
+ورودی: اسم بازیکن به انگلیسی با املا صحیح
+خروجی: اطلاعات بازیکن
+مثال: /player salah
+------
+دستور: /popular_players 
+ورودی: تعداد بازیکنان محبوب (اختیاری)
+خروجی: اطلاعات بازیکنان محبوب بر اساس درصد مالکیت
+مثال: /popular_players 10
+-----
+دستور های /popular_forwards، /popular_midfielders، /popular_defenders و /popular_goalkeepers نیز مانند دستور بالا عمل میکنند برای پست های مختلف.
+-----
+دستور: /next_games
+ورودی: اسم تیم
+خروجی: بازی های بعدی تیم مورد نظر
+مثال:  /next_games man utd
+-----
+دستور: /easy_matches
+ورودی: تعداد تیم های مورد نظر (اختیاری)
+خروجی: لیست 5 بازی بعدی تیم ها که بر اساس آسانی مرتب شده
+مثال: /easy_games 6
+-----
+دستور: /hard_games
+ورودی: تعداد تیم های مورد نظر (اختیاری)
+خروجی: لیست 5 بازی بعدی تیم ها که بر اساس سختی مرتب شده
+مثال: /hard_games 6
+"""
+    context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+
+
 def player_stats(update, context):
     # TODO User freindly nist
     player_name = ' '.join(context.args)
@@ -295,16 +327,16 @@ dispatcher.add_handler(popular_midfielders_handler)
 popular_defenders_handler = CommandHandler('popular_defenders', popular_defenders)
 dispatcher.add_handler(popular_defenders_handler)
 
-next_games_handler = CommandHandler('next_games', next_games)
-dispatcher.add_handler(next_games_handler)
-
 popular_goalkeepers_handler = CommandHandler('popular_goalkeepers', popular_goalkeepers)
 dispatcher.add_handler(popular_goalkeepers_handler)
 
-easy_matches_handler = CommandHandler('easy_matches', easy_matches)
+next_games_handler = CommandHandler('next_games', next_games)
+dispatcher.add_handler(next_games_handler)
+
+easy_matches_handler = CommandHandler('easy_games', easy_matches)
 dispatcher.add_handler(easy_matches_handler)
 
-hard_matches_handler = CommandHandler('hard_matches', hard_matches)
+hard_matches_handler = CommandHandler('hard_games', hard_matches)
 dispatcher.add_handler(hard_matches_handler)
 
 start_handler = CommandHandler('start', hello)
