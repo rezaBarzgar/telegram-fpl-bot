@@ -127,19 +127,9 @@ def player_stats(update, context):
                    f"last name : {row.second_name}\n" \
                    f"cost : {row.now_cost / 10}\n" \
                    f"form : {row.form}\n" \
-                   f"position : {row.element_type}\n" \
-                   f"team : {row.team}\n" \
-                   f"total points : {row.total_points}\n" \
-                   f"points per game : {row.points_per_game}\n" \
-                   f"GW transfer in : {row.transfers_in_event}\n" \
-                   f"GW transfer out : {row.transfers_out_event}\n" \
-                   f"bonus : {row.bonus}\n" \
-                   f"ict_index: {row.ict_index}\n" \
-                   f"ict_index_rank : {row.ict_index_rank}\n" \
-                   f"minutes : {row.minutes}\n" \
-                   f"goals scored : {row.goals_scored}\n" \
-                   f"assists : {row.assists}\n" \
-                   f"clean sheets : {row.clean_sheets}\n"
+                   f"ict_index_rank : {row.ict_index_rank}\n" + \
+                   SPLITTER + "\n" + \
+                   f"{row.team.lower()} next games:\n" + SPLITTER + "\n" + sts.get_next_games(row.team.lower())
             response_message = response_message + temp + SPLITTER + '\n'
         response_message = response_message + CHANNEL_AND_BOT_ID
     else:
@@ -147,27 +137,11 @@ def player_stats(update, context):
                            f"last name : {data.second_name.item()}\n" \
                            f"cost : {data.now_cost.item() / 10}\n" \
                            f"form : {data.form.item()}\n" \
-                           f"position : {data.element_type.item()}\n" \
-                           f"team : {data.team.item()}\n" \
                            f"total points : {data.total_points.item()}\n" \
                            f"points per game : {data.points_per_game.item()}\n" \
-                           f"GW transfer in : {data.transfers_in_event.item()}\n" \
-                           f"GW transfer out : {data.transfers_out_event.item()}\n" \
-                           f"bonus : {data.bonus.item()}\n" \
-                           f"ict_index: {data.ict_index.item()}\n" \
                            f"ict_index_rank : {data.ict_index_rank.item()}\n" \
-                           f"minutes : {data.minutes.item()}\n" \
-                           f"goals scored : {data.goals_scored.item()}\n" \
-                           f"assists : {data.assists.item()}\n" \
-                           f"clean sheets : {data.clean_sheets.item()}\n" \
-                           f"goals conceded : {data.goals_conceded.item()}\n" \
-                           f"own_goals : {data.own_goals.item()}\n" \
-                           f"penalties saved : {data.penalties_saved.item()}\n" \
-                           f"penalties missed : {data.penalties_missed.item()}\n" \
-                           f"yellow cards : {data.yellow_cards.item()}\n" \
-                           f"red cards : {data.red_cards.item()}\n" \
-                           f"saves : {data.saves.item()}\n" + SPLITTER + "\n" \
-                                                                         f"{data.team.item().lower()} next games:\n" + SPLITTER + "\n" + sts.get_next_games(
+                           + SPLITTER + "\n" + \
+                           f"{data.team.item().lower()} next games:\n" + SPLITTER + "\n" + sts.get_next_games(
             data.team.item().lower()) + CHANNEL_AND_BOT_ID
 
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
