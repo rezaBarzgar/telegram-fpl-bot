@@ -339,6 +339,9 @@ dispatcher.add_handler(easy_matches_handler)
 hard_matches_handler = CommandHandler('hard_games', hard_matches)
 dispatcher.add_handler(hard_matches_handler)
 
+help_handler = CommandHandler('help', help)
+dispatcher.add_handler(help_handler)
+
 start_handler = CommandHandler('start', hello)
 dispatcher.add_handler(start_handler)
 
