@@ -15,7 +15,7 @@ for key, value in teams_dict.items():
     teams_dict[key] = value.lower()
 TEAMS_TO_STRING = ''
 SPLITTER = 30 * '~'
-CHANNEL_AND_BOT_ID = '@FPL_TALK\n@persian_fpl_talk_bot'
+CHANNEL_AND_BOT_ID = '@FPL_TALK\n@FPL_TALK_BOT'
 STATS = None
 LAST_STATS_UPDATE = datetime.datetime.now()
 TOKEN = os.environ["TOKEN"]
