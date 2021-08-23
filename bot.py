@@ -1,4 +1,3 @@
-import copy
 import datetime
 
 from telegram.ext import Updater, CommandHandler
@@ -7,6 +6,7 @@ import logging
 import statistics
 import utils
 import pandas as pd
+import os
 
 #  -------------------- START ------------------------------------
 sts = statistics.Statistics()
@@ -18,7 +18,8 @@ SPLITTER = 30 * '~'
 CHANNEL_AND_BOT_ID = '@FPL_TALK\n@persian_fpl_talk_bot'
 STATS = None
 LAST_STATS_UPDATE = datetime.datetime.now()
-updater = Updater(token='1765909251:AAGX1_LCh8IxCFishKKw3G20Oyl4x5EYqMA', use_context=True)
+TOKEN = os.environ["TOKEN"]
+updater = Updater(token=TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -73,7 +74,7 @@ def hello(update, context):
 
 
 def player_stats(update, context):
-    # TODO tashaboh esmi ha handle nashude
+    # TODO User freindly nist
     player_name = ' '.join(context.args)
     player_name = utils.strip_accents(player_name).lower()
     data = STATS[STATS.web_name == player_name].reset_index()
@@ -132,7 +133,7 @@ def player_stats(update, context):
 
 def popular_players(update, context):
     if len(context.args) == 0:
-        count = 10
+        count = 5
     else:
         count = int(''.join(context.args))
     df = STATS.sort_values(by=['selected_by_percent'], ascending=False).head(count).reset_index()
@@ -147,7 +148,7 @@ def popular_players(update, context):
 
 def popular_forwards(update, context):
     if len(context.args) == 0:
-        count = 10
+        count = 5
     else:
         count = int(''.join(context.args))
     df = STATS.sort_values(by=['selected_by_percent'], ascending=False)
@@ -163,7 +164,7 @@ def popular_forwards(update, context):
 
 def popular_midfielders(update, context):
     if len(context.args) == 0:
-        count = 10
+        count = 5
     else:
         count = int(''.join(context.args))
 
@@ -180,7 +181,7 @@ def popular_midfielders(update, context):
 
 def popular_defenders(update, context):
     if len(context.args) == 0:
-        count = 10
+        count = 5
     else:
         count = int(''.join(context.args))
 
@@ -197,7 +198,7 @@ def popular_defenders(update, context):
 
 def popular_goalkeepers(update, context):
     if len(context.args) == 0:
-        count = 10
+        count = 5
     else:
         count = int(''.join(context.args))
 
