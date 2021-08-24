@@ -142,7 +142,7 @@ class Statistics:
         output = 'Gregorian:\n' + 'DATE: ' + str(deadline_date[0]) + '-' + str(deadline_date[1]) + '-' + str(
             deadline_date[2]) + '\n' + 'TIME: ' + deadline.split('T')[1][:-3] + '\n\n' + \
                  'Jalali:\n' + 'DATE: ' + jdeadline + '\n' + 'TIME: ' + str(deadline_time[0]) + ':' + str(
-            deadline_time[1]) + '\n'
+            deadline_time[1]) + '\n\n'
         return output
 
     def get_next_games(self, team):
