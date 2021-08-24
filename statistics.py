@@ -140,7 +140,7 @@ class Statistics:
         jdeadline = jdatetime.datetime.fromgregorian(day=deadline_date[2], month=deadline_date[1],
                                                      year=deadline_date[0]).strftime("%Y-%m-%d")
         output = 'Gregorian:\n' + 'DATE: ' + str(deadline_date[0]) + '-' + str(deadline_date[1]) + '-' + str(
-            deadline_date[2]) + '\n' + 'TIME: ' + deadline.split('T')[1] + '\n' + \
+            deadline_date[2]) + '\n' + 'TIME: ' + deadline.split('T')[1][:-3] + '\n\n' + \
                  'Jalali:\n' + 'DATE: ' + jdeadline + '\n' + 'TIME: ' + str(deadline_time[0]) + ':' + str(
             deadline_time[1]) + '\n'
         return output
