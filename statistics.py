@@ -133,10 +133,10 @@ class Statistics:
         deadline_time = [int(item) for item in deadline_time.split(':')]
         if deadline_time[1] + 30 > 60:
             deadline_time[1] = (deadline_time[1] + 30) % 60
-            deadline_time[0] += 4
+            deadline_time[0] += 5
         else:
             deadline_time[1] += 30
-            deadline_time[0] += 3
+            deadline_time[0] += 4
         jdeadline = jdatetime.datetime.fromgregorian(day=deadline_date[2], month=deadline_date[1],
                                                      year=deadline_date[0]).strftime("%Y-%m-%d")
         output = f'Deadline GW {event}' + '\n\n' + 'Gregorian:\n' + 'DATE: ' + str(deadline_date[0]) + '-' + str(
