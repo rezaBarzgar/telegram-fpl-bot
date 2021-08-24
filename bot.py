@@ -17,6 +17,7 @@ TEAMS_TO_STRING = ''
 SPLITTER = 30 * '~'
 CHANNEL_AND_BOT_ID = '@FPL_TALK\n@FPL_TALK_BOT'
 STATS = None
+DEADLINE = None
 LAST_STATS_UPDATE = datetime.datetime.now()
 TOKEN = os.environ["TOKEN"]
 updater = Updater(token=TOKEN, use_context=True)
@@ -30,7 +31,9 @@ job_queue = updater.job_queue
 def stats_updater(update='', context=''):
     try:
         global STATS
+        global DEADLINE
         STATS = pd.DataFrame(sts.update_statistics())
+        DEADLINE = sts.update_deadline()
         STATS['dreamteam_count'] = pd.to_numeric(STATS['dreamteam_count'])
         STATS['ep_next'] = pd.to_numeric(STATS['ep_next'])
         STATS['ep_this'] = pd.to_numeric(STATS['ep_this'])
@@ -110,6 +113,11 @@ def help(update, context):
 @FPL_TALK
 @FPL_TALK_BOT
 """
+    context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+
+
+def deadline(update, context):
+    message = DEADLINE + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
 
@@ -326,6 +334,9 @@ dispatcher.add_handler(hard_matches_handler)
 
 help_handler = CommandHandler('help', help)
 dispatcher.add_handler(help_handler)
+
+deadline_handler = CommandHandler('deadline', deadline)
+dispatcher.add_handler(deadline_handler)
 
 start_handler = CommandHandler('start', hello)
 dispatcher.add_handler(start_handler)

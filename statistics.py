@@ -1,7 +1,7 @@
 import json
 import requests
 import pandas as pd
-
+import jdatetime
 import utils
 
 SPLITTER = 30 * '~'
@@ -118,6 +118,32 @@ class Statistics:
             'ict_index',
             'ict_index_rank',
         ]
+
+    def update_deadline(self):
+        req = requests.get("https://fantasy.premierleague.com/api/bootstrap-static/")
+        data = req.json()['events']
+        event = 0
+        deadline = None
+        for item in data:
+            if item['is_next']:
+                event = item['id']
+                deadline = item['deadline_time'][:-1]
+        deadline_date, deadline_time = deadline.split('T')
+        deadline_date = [int(item) for item in deadline_date.split('-')]
+        deadline_time = [int(item) for item in deadline_time.split(':')]
+        if deadline_time[1] + 30 > 60:
+            deadline_time[1] = (deadline_time[1] + 30) % 60
+            deadline_time[0] += 4
+        else:
+            deadline_time[1] += 30
+            deadline_time[0] += 3
+        jdeadline = jdatetime.datetime.fromgregorian(day=deadline_date[2], month=deadline_date[1],
+                                                     year=deadline_date[0]).strftime("%Y-%m-%d")
+        output = 'Gregorian:\n' + 'DATE: ' + str(deadline_date[0]) + '-' + str(deadline_date[1]) + '-' + str(
+            deadline_date[2]) + '\n' + 'TIME: ' + deadline.split('T')[1] + '\n' + \
+                 'Jalali:\n' + 'DATE: ' + jdeadline + '\n' + 'TIME: ' + str(deadline_time[0]) + ':' + str(
+            deadline_time[1]) + '\n'
+        return output
 
     def get_next_games(self, team):
         # output = f"{team} next games:\n" + SPLITTER + "\n"
