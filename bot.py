@@ -149,9 +149,8 @@ def player_stats(update, context):
                            f"total points : {data.total_points.item()}\n" \
                            f"points per game : {data.points_per_game.item()}\n" \
                            f"ict_index_rank : {data.ict_index_rank.item()}\n" \
-                           + SPLITTER + "\n" + \
-                           f"{data.team.item().lower()} next games:\n" + SPLITTER + "\n" + sts.get_next_games(
-            data.team.item().lower()) + CHANNEL_AND_BOT_ID
+                           f"{data.team.item().lower()} next games: " + sts.get_next_games_color(
+            data.team.item().lower()) + '\n' + CHANNEL_AND_BOT_ID
 
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 

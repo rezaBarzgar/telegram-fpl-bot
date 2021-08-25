@@ -81,6 +81,8 @@ SPLITTER = 30 * '~'
 
 class Statistics:
     def __init__(self):
+        # COLORS ARE GREEN(1,2), YELLOW(3), ORANGE(4) and RED(5)
+        self.difficulties_color = {1: "\U0001F7E9", 2: "\U0001F7E9", 3: "\U0001F7E8", 4: "\U0001F7E7", 5: "\U0001F7E5"}
         self.base_urls = ['https://fantasy.premierleague.com/api/bootstrap-static/',
                           'https://fantasy.premierleague.com/api/element-summary/',
                           'https://fantasy.premierleague.com/api/fixtures/']
@@ -120,7 +122,7 @@ class Statistics:
         ]
 
     def update_deadline(self):
-        req = requests.get("https://fantasy.premierleague.com/api/bootstrap-static/")
+        req = requests.get(self.base_urls[0])
         data = req.json()['events']
         event = 0
         deadline = None
@@ -144,6 +146,28 @@ class Statistics:
             deadline_date[2]) + '\n' + 'TIME: ' + deadline.split('T')[1][:-3] + '\n\n' + \
                  'Jalali:\n' + 'DATE: ' + jdeadline + '\n' + 'TIME: ' + str(deadline_time[0]) + ':' + str(
             deadline_time[1]) + '\n\n'
+        return output
+
+    def get_next_games_color(self, team):
+        output = ""
+        req = requests.get(self.base_urls[0])
+        teams_dict = self.__get_teams_name(req)
+        for key, value in teams_dict.items():
+            teams_dict[key] = value.lower()
+        req = requests.get(self.base_urls[2])
+        data = req.json()
+        id = 0
+        event = self.get_current_gw()
+        for key, value in teams_dict.items():
+            if value == team:
+                id = int(key)
+                break
+        for item in data:
+            if event < int(item['event']) <= event + 5:
+                if item['team_a'] == id:
+                    output = output + self.difficulties_color[item['team_h_difficulty']]
+                if item['team_h'] == id:
+                    output = output + self.difficulties_color[item['team_a_difficulty']]
         return output
 
     def get_next_games(self, team):
