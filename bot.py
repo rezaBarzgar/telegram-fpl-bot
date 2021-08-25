@@ -349,7 +349,7 @@ dispatcher.add_handler(deadline_handler)
 start_handler = CommandHandler('start', hello)
 dispatcher.add_handler(start_handler)
 
-unknown_handler = MessageHandler(Filters.text, unknown)
+unknown_handler = MessageHandler(Filters.command, unknown)
 dispatcher.add_handler(unknown_handler)
 
 #  -------------------- RUN --------------------------------
