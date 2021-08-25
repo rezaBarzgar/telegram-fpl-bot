@@ -165,9 +165,9 @@ class Statistics:
         for item in data:
             if event < int(item['event']) <= event + 5:
                 if item['team_a'] == id:
-                    output = output + self.difficulties_color[item['team_h_difficulty']]
+                    output = output + self.difficulties_color[item['team_h_difficulty']] + ' '
                 if item['team_h'] == id:
-                    output = output + self.difficulties_color[item['team_a_difficulty']]
+                    output = output + self.difficulties_color[item['team_a_difficulty']] + ' '
         return output
 
     def get_next_games(self, team):

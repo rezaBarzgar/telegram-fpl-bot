@@ -137,8 +137,7 @@ def player_stats(update, context):
                    f"cost : {row.now_cost / 10}\n" \
                    f"form : {row.form}\n" \
                    f"ict_index_rank : {row.ict_index_rank}\n" + \
-                   SPLITTER + "\n" + \
-                   f"{row.team.lower()} next games:\n" + SPLITTER + "\n" + sts.get_next_games(row.team.lower())
+                   f"{row.team.lower()} next games: " + sts.get_next_games_color(row.team.lower())
             response_message = response_message + temp + SPLITTER + '\n'
         response_message = response_message + CHANNEL_AND_BOT_ID
     elif data.shape[0] == 1:
