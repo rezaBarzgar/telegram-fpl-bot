@@ -81,8 +81,8 @@ SPLITTER = 30 * '~'
 
 class Statistics:
     def __init__(self):
-        # COLORS ARE GREEN(1,2), YELLOW(3), ORANGE(4) and RED(5)
-        self.difficulties_color = {1: "\U0001F7E9", 2: "\U0001F7E9", 3: "\U0001F7E8", 4: "\U0001F7E7", 5: "\U0001F7E5"}
+        # COLORS ARE GREEN(1,2), YELLOW(3), RED(4) and BLACK(5)
+        self.difficulties_color = {1: "\U0001F7E9", 2: "\U0001F7E9", 3: "\U0001F7E8", 4: "\U0001F7E5", 5: "\U00002B1B"}
         self.base_urls = ['https://fantasy.premierleague.com/api/bootstrap-static/',
                           'https://fantasy.premierleague.com/api/element-summary/',
                           'https://fantasy.premierleague.com/api/fixtures/']
@@ -166,10 +166,10 @@ class Statistics:
             if event < int(item['event']) <= event + 5:
                 if item['team_a'] == id:
                     print(self.difficulties_color[item['team_a_difficulty']])
-                    output = output + self.difficulties_color[item['team_a_difficulty']] + ' '
+                    output = output + self.difficulties_color[item['team_a_difficulty']]
                 if item['team_h'] == id:
                     print(self.difficulties_color[item['team_h_difficulty']])
-                    output = output + self.difficulties_color[item['team_h_difficulty']] + ' '
+                    output = output + self.difficulties_color[item['team_h_difficulty']]
         return output
 
     def get_next_games(self, team):
