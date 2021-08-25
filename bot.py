@@ -33,6 +33,7 @@ def stats_updater(update='', context=''):
         global STATS
         global DEADLINE
         STATS = pd.DataFrame(sts.update_statistics())
+        STATS['name'] = STATS['first_name'] + ' ' + STATS['second_name'] + ' ' + STATS['web_name']
         DEADLINE = sts.update_deadline()
         STATS['dreamteam_count'] = pd.to_numeric(STATS['dreamteam_count'])
         STATS['ep_next'] = pd.to_numeric(STATS['ep_next'])
@@ -123,9 +124,10 @@ def deadline(update, context):
 
 def player_stats(update, context):
     # TODO User freindly nist
-    player_name = ' '.join(context.args)
+    player_name = '.*?'.join(context.args)
     player_name = utils.strip_accents(player_name).lower()
-    data = STATS[STATS.web_name == player_name].reset_index()
+    player_name = '.*?' + player_name + '.*?'
+    data = STATS[STATS.name.str.contains(player_name, regex=True)].reset_index()
     response_message = ""
     if data.shape[0] == 0:
         response_message = "sorry, I cannot find player with this name :( \n" + CHANNEL_AND_BOT_ID
