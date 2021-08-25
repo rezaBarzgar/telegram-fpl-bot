@@ -167,6 +167,8 @@ class Statistics:
             temp['team'] = teams_dict[f'{str(player["team"])}']
             temp['element_type'] = elements_type_dict[f'{str(player["element_type"])}']
             temp['web_name'] = utils.strip_accents(temp['web_name']).lower()
+            temp['first_name'] = utils.strip_accents(temp['first_name']).lower()
+            temp['second_name'] = utils.strip_accents(temp['second_name']).lower()
             output.append(temp)
         return output
 
