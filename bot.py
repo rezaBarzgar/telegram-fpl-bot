@@ -293,13 +293,18 @@ def echo(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
 
 
-def concat(update, context):
-    txt = '-'.join(context.args)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=txt)
-
-
 def unknown(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, I didn't understand that command.")
+
+
+def coin_flip(update, context):
+    try:
+        player1, player2 = ' '.join(context.args).split('-')
+        message = "coin flip result: " + sts.coin_flip(player1, player2) + '\n' + CHANNEL_AND_BOT_ID
+    except Exception as e:
+        message = "Invalid input:(\ntwo players must be devided by (-)\nFor example salah - fernandes\n" \
+                  + CHANNEL_AND_BOT_ID
+    context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
 
 #  -------------------- HANDLERS --------------------------------
@@ -332,6 +337,9 @@ dispatcher.add_handler(hard_matches_handler)
 
 help_handler = CommandHandler('help', help)
 dispatcher.add_handler(help_handler)
+
+coin_flip_handler = CommandHandler('coin_flip', coin_flip)
+dispatcher.add_handler(coin_flip_handler)
 
 deadline_handler = CommandHandler('deadline', deadline)
 dispatcher.add_handler(deadline_handler)

@@ -1,8 +1,8 @@
 import json
 import requests
-import pandas as pd
 import jdatetime
 import utils
+import random
 
 SPLITTER = 30 * '~'
 """EXAMPLE OF AN ELEMENT's DATA
@@ -121,6 +121,78 @@ class Statistics:
             'ict_index_rank',
         ]
 
+    def get_teams(self):
+        req = requests.get(self.base_urls[0])
+        return self.__get_teams_name(req)
+
+    def __get_teams_name(self, req):
+        data = req.json()['teams']
+        output = {}
+        for item in data:
+            output[f'{item["id"]}'] = item['name']
+        return output
+
+    def __get_element_types(self, req):
+        data = req.json()['element_types']
+        output = {}
+        for item in data:
+            output[f'{item["id"]}'] = item['singular_name']
+        return output
+
+    def get_current_gw(self):
+        current = 0
+        req = requests.get(self.base_urls[0])
+        print('received')
+        data = req.json()['events']
+        for item in data:
+            if item['is_current']:
+                current = item['id']
+        return current
+
+    def update_statistics(self):
+        # TODO chand ta az value ha bayad az str tabdil be int beshe
+        req = requests.get(self.base_urls[0])
+        print('~~~~~~~~~~~~~~~STATS UPDATED!~~~~~~~~~~~~~~~~~~~~')
+        data = req.json()['elements']
+        teams_dict = self.__get_teams_name(req)
+        elements_type_dict = self.__get_element_types(req)
+        keys = data[0].keys()
+        output = []
+        for player in data:
+            temp = {}
+            for key in keys:
+                if key in self.necessary_statistics:
+                    temp[key] = player[key]
+            temp['selected_by_percent'] = float(temp['selected_by_percent'])
+            temp['team'] = teams_dict[f'{str(player["team"])}']
+            temp['element_type'] = elements_type_dict[f'{str(player["element_type"])}']
+            temp['web_name'] = utils.strip_accents(temp['web_name']).lower()
+            output.append(temp)
+        return output
+
+    def get_next_games(self, team):
+        # output = f"{team} next games:\n" + SPLITTER + "\n"
+        output = ""
+        req = requests.get(self.base_urls[0])
+        teams_dict = self.__get_teams_name(req)
+        for key, value in teams_dict.items():
+            teams_dict[key] = value.lower()
+        req = requests.get(self.base_urls[2])
+        data = req.json()
+        id = 0
+        event = self.get_current_gw()
+        for key, value in teams_dict.items():
+            if value == team:
+                id = int(key)
+                break
+        for item in data:
+            if event < int(item['event']) <= event + 5:
+                if item['team_a'] == id:
+                    output = output + teams_dict[str(item['team_h'])] + f" GW{item['event']}" + ' (away)\n'
+                if item['team_h'] == id:
+                    output = output + teams_dict[str(item['team_a'])] + f" GW{item['event']}" + ' (home)\n'
+        return output
+
     def update_deadline(self):
         req = requests.get(self.base_urls[0])
         data = req.json()['events']
@@ -172,29 +244,6 @@ class Statistics:
                     output = output + self.difficulties_color[item['team_h_difficulty']]
         return output
 
-    def get_next_games(self, team):
-        # output = f"{team} next games:\n" + SPLITTER + "\n"
-        output = ""
-        req = requests.get(self.base_urls[0])
-        teams_dict = self.__get_teams_name(req)
-        for key, value in teams_dict.items():
-            teams_dict[key] = value.lower()
-        req = requests.get(self.base_urls[2])
-        data = req.json()
-        id = 0
-        event = self.get_current_gw()
-        for key, value in teams_dict.items():
-            if value == team:
-                id = int(key)
-                break
-        for item in data:
-            if event < int(item['event']) <= event + 5:
-                if item['team_a'] == id:
-                    output = output + teams_dict[str(item['team_h'])] + f" GW{item['event']}" + ' (away)\n'
-                if item['team_h'] == id:
-                    output = output + teams_dict[str(item['team_a'])] + f" GW{item['event']}" + ' (home)\n'
-        return output
-
     def calculate_difficulties(self):
         difficulties = []
         req = requests.get(self.base_urls[0])
@@ -216,54 +265,9 @@ class Statistics:
             difficulties.append((value, float("{:.2f}".format(diffculity))))
         return difficulties
 
-    def get_current_gw(self):
-        current = 0
-        req = requests.get(self.base_urls[0])
-        print('received')
-        data = req.json()['events']
-        for item in data:
-            if item['is_current']:
-                current = item['id']
-        return current
-
-    def update_statistics(self):
-        # TODO chand ta az value ha bayad az str tabdil be int beshe
-        req = requests.get(self.base_urls[0])
-        print('~~~~~~~~~~~~~~~STATS UPDATED!~~~~~~~~~~~~~~~~~~~~')
-        data = req.json()['elements']
-        teams_dict = self.__get_teams_name(req)
-        elements_type_dict = self.__get_element_types(req)
-        keys = data[0].keys()
-        output = []
-        for player in data:
-            temp = {}
-            for key in keys:
-                if key in self.necessary_statistics:
-                    temp[key] = player[key]
-            temp['selected_by_percent'] = float(temp['selected_by_percent'])
-            temp['team'] = teams_dict[f'{str(player["team"])}']
-            temp['element_type'] = elements_type_dict[f'{str(player["element_type"])}']
-            temp['web_name'] = utils.strip_accents(temp['web_name']).lower()
-            output.append(temp)
-        return output
-
-    def get_teams(self):
-        req = requests.get(self.base_urls[0])
-        return self.__get_teams_name(req)
-
-    def __get_teams_name(self, req):
-        data = req.json()['teams']
-        output = {}
-        for item in data:
-            output[f'{item["id"]}'] = item['name']
-        return output
-
-    def __get_element_types(self, req):
-        data = req.json()['element_types']
-        output = {}
-        for item in data:
-            output[f'{item["id"]}'] = item['singular_name']
-        return output
+    def coin_flip(self, player1, player2):
+        result = random.randint(0, 1)
+        return player1 if result == 0 else player2
 
 
 if __name__ == '__main__':
