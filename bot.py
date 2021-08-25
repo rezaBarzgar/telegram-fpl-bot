@@ -111,6 +111,18 @@ def help(update, context):
 مثال:
 /hard_games 6
 ------------------------------------
+دستور: /flip_coin
+ورودی: نام دو بازیکن که با (-) از هم جدا شده اند
+خروجی: اسم یکی از بازیکنان ورودی
+مثال:
+/flip_coin salah - fernandes
+------------------------------------
+دستور: /deadline
+ورودی: ندارد
+خروجی: تاریخ دلاین به میلادی و شمسی
+مثال:
+/deadline
+------------------------------------
 @FPL_TALK
 @FPL_TALK_BOT
 """
@@ -304,7 +316,7 @@ def coin_flip(update, context):
         player1, player2 = ' '.join(context.args).split('-')
         message = "coin flip result: " + sts.coin_flip(player1, player2) + '\n' + CHANNEL_AND_BOT_ID
     except Exception as e:
-        message = "Invalid input:(\ntwo players must be devided by (-)\nFor example salah - fernandes\n" \
+        message = "Invalid input:(\ntwo players must be divided by (-)\nFor example salah - fernandes\n" \
                   + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
