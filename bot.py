@@ -338,7 +338,7 @@ dispatcher.add_handler(hard_matches_handler)
 help_handler = CommandHandler('help', help)
 dispatcher.add_handler(help_handler)
 
-coin_flip_handler = CommandHandler('coin_flip', coin_flip)
+coin_flip_handler = CommandHandler('flip_coin', coin_flip)
 dispatcher.add_handler(coin_flip_handler)
 
 deadline_handler = CommandHandler('deadline', deadline)

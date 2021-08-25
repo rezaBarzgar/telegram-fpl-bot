@@ -237,10 +237,8 @@ class Statistics:
         for item in data:
             if event < int(item['event']) <= event + 5:
                 if item['team_a'] == id:
-                    print(self.difficulties_color[item['team_a_difficulty']])
                     output = output + self.difficulties_color[item['team_a_difficulty']]
                 if item['team_h'] == id:
-                    print(self.difficulties_color[item['team_h_difficulty']])
                     output = output + self.difficulties_color[item['team_h_difficulty']]
         return output
 
