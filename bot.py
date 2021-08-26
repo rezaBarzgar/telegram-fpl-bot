@@ -251,6 +251,89 @@ def popular_goalkeepers(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
+# ------------------------------DUP---------------------
+def onfire_players(update, context):
+    if len(context.args) == 0:
+        count = 5
+    else:
+        count = int(''.join(context.args))
+    df = STATS.sort_values(by=['form'], ascending=False).head(count).reset_index()
+    response_message = ""
+    for index, row in df.iterrows():
+        temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
+               f"position: {row.element_type}   team: {row.team}\n"
+        response_message = response_message + temp + SPLITTER + '\n'
+    response_message = response_message + CHANNEL_AND_BOT_ID
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+
+
+def onfire_forwards(update, context):
+    if len(context.args) == 0:
+        count = 5
+    else:
+        count = int(''.join(context.args))
+    df = STATS.sort_values(by=['form'], ascending=False)
+    df = df[df.element_type == 'Forward'].head(count).reset_index()
+    response_message = ""
+    for index, row in df.iterrows():
+        temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
+               f"team: {row.team}\n"
+        response_message = response_message + temp + SPLITTER + '\n'
+    response_message = response_message + CHANNEL_AND_BOT_ID
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+
+
+def onfire_midfielders(update, context):
+    if len(context.args) == 0:
+        count = 5
+    else:
+        count = int(''.join(context.args))
+
+    df = STATS.sort_values(by=['form'], ascending=False)
+    df = df[df.element_type == 'Midfielder'].head(count).reset_index()
+    response_message = ""
+    for index, row in df.iterrows():
+        temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
+               f"team: {row.team}\n"
+        response_message = response_message + temp + SPLITTER + '\n'
+    response_message = response_message + CHANNEL_AND_BOT_ID
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+
+
+def onfire_defenders(update, context):
+    if len(context.args) == 0:
+        count = 5
+    else:
+        count = int(''.join(context.args))
+
+    df = STATS.sort_values(by=['form'], ascending=False)
+    df = df[df.element_type == 'Defender'].head(count).reset_index()
+    response_message = ""
+    for index, row in df.iterrows():
+        temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
+               f"team: {row.team}\n"
+        response_message = response_message + temp + SPLITTER + '\n'
+    response_message = response_message + CHANNEL_AND_BOT_ID
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+
+
+def onfire_goalkeepers(update, context):
+    if len(context.args) == 0:
+        count = 5
+    else:
+        count = int(''.join(context.args))
+
+    df = STATS.sort_values(by=['form'], ascending=False)
+    df = df[df.element_type == 'Goalkeeper'].head(count).reset_index()
+    response_message = ""
+    for index, row in df.iterrows():
+        temp = f"player {index + 1}: {row.web_name}   selected: {row.selected_by_percent}   cost: {int(row.now_cost) / 10}   " \
+               f"team: {row.team}\n"
+        response_message = response_message + temp + SPLITTER + '\n'
+    response_message = response_message + CHANNEL_AND_BOT_ID
+    context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+
+
 def next_games(update, context):
     if TEAMS_TO_STRING == '':
         teams_to_string()
@@ -427,6 +510,21 @@ dispatcher.add_handler(popular_defenders_handler)
 
 popular_goalkeepers_handler = CommandHandler('popular_goalkeepers', popular_goalkeepers)
 dispatcher.add_handler(popular_goalkeepers_handler)
+
+onfire_players_handler = CommandHandler('onfire_players', onfire_players)
+dispatcher.add_handler(onfire_players_handler)
+
+onfire_forwards_handler = CommandHandler('onfire_forwards', onfire_forwards)
+dispatcher.add_handler(onfire_forwards_handler)
+
+onfire_midfielders_handler = CommandHandler('onfire_midfielders', onfire_midfielders)
+dispatcher.add_handler(onfire_midfielders_handler)
+
+onfire_defenders_handler = CommandHandler('onfire_defenders', onfire_defenders)
+dispatcher.add_handler(onfire_defenders_handler)
+
+onfire_goalkeepers_handler = CommandHandler('onfire_goalkeepers', onfire_goalkeepers)
+dispatcher.add_handler(onfire_goalkeepers_handler)
 
 next_games_handler = CommandHandler('next_games', next_games)
 dispatcher.add_handler(next_games_handler)
