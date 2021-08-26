@@ -326,14 +326,16 @@ def compare(update, context):
         playerA, playerB = ' '.join(context.args).split('-')
         playerA.strip()
         playerB.strip()
+        print('-'+playerA+'-')
+        print('-'+playerB+'-')
     except Exception as e:
         message = "Invalid input:(\ntwo players must be divided by (-)\nFor example salah - fernandes\n" \
                   + CHANNEL_AND_BOT_ID
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
         return
 
-    player1 = STATS.loc[STATS.web_name.str.contains(playerA)]
-    player2 = STATS.loc[STATS.web_name.str.contains(playerB)]
+    player1 = STATS[STATS.web_name.str.contains(playerA)].loc[0]
+    player2 = STATS[STATS.web_name.str.contains(playerB)].loc[0]
     player1_score = 0
     player2_score = 0
     diff_dict = dict(sts.calculate_difficulties())
@@ -392,9 +394,9 @@ def compare(update, context):
     else:
         message += "next matches difficulties are equal\n"
 
-    result = player1.web_name if player1_score > player2_score else player2.web_name
+    result = player1.web_name.item() if player1_score > player2_score else player2.web_name.item()
     message = f"I recommend \U0001F3C5{result}\U0001F3C5\n" \
-              + f"{player1.web_name} score: {player1_score} \U0001F19A {player1.web_name} score: {player1_score}\n" \
+              + f"{player1.web_name.item()} score: {player1_score} \U0001F19A {player1.web_name.item()} score: {player1_score}\n" \
               + message + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
