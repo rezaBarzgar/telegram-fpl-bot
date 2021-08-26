@@ -334,9 +334,14 @@ def compare(update, context):
                   + CHANNEL_AND_BOT_ID
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
         return
-
-    player1 = STATS[STATS.web_name.str.contains(playerA)].iloc[0]
-    player2 = STATS[STATS.web_name.str.contains(playerB)].iloc[0]
+    try:
+        player1 = STATS[STATS.web_name.str.contains(playerA)].iloc[0]
+        player2 = STATS[STATS.web_name.str.contains(playerB)].iloc[0]
+    except Exception as e:
+        message = "Unable to find one or two players, maybe there is a typo in inputs.\n" \
+                  + CHANNEL_AND_BOT_ID
+        context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+        return
     player1_score = 0
     player2_score = 0
     diff_dict = dict(sts.calculate_difficulties())
