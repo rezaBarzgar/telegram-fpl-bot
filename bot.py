@@ -323,7 +323,7 @@ def coin_flip(update, context):
 
 def compare(update, context):
     try:
-        player1, player2 = '-'.join(context.args).split('-')
+        player1, player2 = ' '.join(context.args).split('-')
         player1.strip()
         player2.strip()
     except Exception as e:
@@ -332,8 +332,11 @@ def compare(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
         return
     try:
+        print(player1,player2)
+        print('||||||||||||||||||||||||')
         player1 = STATS[STATS.web_name.str.contains(player1)].iloc[0]
         player2 = STATS[STATS.web_name.str.contains(player2)].iloc[0]
+        print(player1, player2)
     except Exception as e:
         message = "unable to find one or both of the players :(\n" \
                   + CHANNEL_AND_BOT_ID
