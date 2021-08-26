@@ -106,7 +106,7 @@ def help(update, context):
 مثال:
 /onfire_players 10
 ------------------------------------
-دستور های / onfire_forwards، / onfire_midfielders، / onfire_defenders و / onfire_goalkeepers نیز مانند دستور بالا عمل میکنند برای پست های مختلف.
+دستور های /onfire_forwards، /onfire_midfielders، /onfire_defenders و /onfire_goalkeepers نیز مانند دستور بالا عمل میکنند برای پست های مختلف.
 ------------------------------------
 دستور: /next_games
 ورودی: اسم تیم
