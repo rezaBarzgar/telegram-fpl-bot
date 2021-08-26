@@ -324,10 +324,10 @@ def coin_flip(update, context):
 def compare(update, context):
     try:
         playerA, playerB = ' '.join(context.args).split('-')
-        playerA.strip()
-        playerB.strip()
-        print('-'+playerA+'-')
-        print('-'+playerB+'-')
+        playerA = playerA.strip()
+        playerB = playerB.strip()
+        print('-' + playerA + '-')
+        print('-' + playerB + '-')
     except Exception as e:
         message = "Invalid input:(\ntwo players must be divided by (-)\nFor example salah - fernandes\n" \
                   + CHANNEL_AND_BOT_ID
@@ -340,63 +340,63 @@ def compare(update, context):
     player2_score = 0
     diff_dict = dict(sts.calculate_difficulties())
     message = ""
-    if float(player1.form.item()) > float(player2.form.item()):
+    if float(player1.form) > float(player2.form):
         message += f"Form: {player1.web_name}\n"
         player1_score += 5
-    elif float(player2.form.item()) > float(player1.form.item()):
+    elif float(player2.form) > float(player1.form):
         message += f"Form: {player2.web_name}\n"
         player2_score += 5
     else:
         message += "Form: equal\n"
 
-    if player1.goals_scored.item() > player2.goals_scored.item():
+    if player1.goals_scored > player2.goals_scored:
         message += f"Goals: {player1.web_name}\n"
-        player1_score += (player1.goals_scored.item() - player2.goals_scored.item())
-    elif player2.goals_scored.item() > player1.goals_scored.item():
+        player1_score += (player1.goals_scored - player2.goals_scored)
+    elif player2.goals_scored > player1.goals_scored:
         message += f"Goals: {player2.web_name}\n"
-        player2_score += (player2.goals_scored.item() - player1.goals_scored.item())
+        player2_score += (player2.goals_scored - player1.goals_scored)
     else:
         message += "Goals: equal\n"
 
-    if player1.assists.item() > player2.assists.item():
+    if player1.assists > player2.assists:
         message += f"Assists: {player1.web_name}\n"
-        player1_score += (player1.assists.item() - player2.assists.item())
-    elif player2.assists.item() > player1.assists.item():
+        player1_score += (player1.assists - player2.assists)
+    elif player2.assists > player1.assists:
         message += f"Assists: {player2.web_name}\n"
-        player2_score += (player2.assists.item() - player1.assists.item())
+        player2_score += (player2.assists - player1.assists)
     else:
         message += "Assists: equal\n"
 
-    if player1.ict_index_rank.item() > player2.ict_index_rank.item():
+    if player1.ict_index_rank > player2.ict_index_rank:
         message += f"ICT Rank: {player1.web_name}\n"
         player1_score += 2
-    elif player2.ict_index_rank.item() > player1.ict_index_rank.item():
+    elif player2.ict_index_rank > player1.ict_index_rank:
         message += f"ICT Rank: {player2.web_name}\n"
         player2_score += 2
     else:
         message += "ICT Rank: equal\n"
 
-    if player1.dreamteam_count.item() > player2.dreamteam_count.item():
+    if player1.dreamteam_count > player2.dreamteam_count:
         message += f"Dream Team Appearances: {player1.web_name}\n"
-        player1_score += (player1.dreamteam_count.item() - player2.dreamteam_count.item())
-    elif player2.dreamteam_count.item() > player1.dreamteam_count.item():
+        player1_score += (player1.dreamteam_count - player2.dreamteam_count)
+    elif player2.dreamteam_count > player1.dreamteam_count:
         message += f"Dream Team Appearances: {player2.web_name}\n"
-        player2_score += (player2.dreamteam_count.item() - player1.dreamteam_count.item())
+        player2_score += (player2.dreamteam_count - player1.dreamteam_count)
     else:
         message += "Dream Team Appearances: equal\n"
 
-    if float(diff_dict[player2.team.item().lower()]) > float(diff_dict[player1.team.item().lower()]):
+    if float(diff_dict[player2.team.lower()]) > float(diff_dict[player1.team.lower()]):
         message += f"next matches difficulties: {player1.web_name}\n"
         player1_score += 4
-    elif float(diff_dict[player1.team.item().lower()]) > float(diff_dict[player2.team.item().lower()]):
+    elif float(diff_dict[player1.team.lower()]) > float(diff_dict[player2.team.lower()]):
         message += f"next matches difficulties: {player2.web_name}\n"
         player2_score += 4
     else:
         message += "next matches difficulties are equal\n"
 
-    result = player1.web_name.item() if player1_score > player2_score else player2.web_name.item()
+    result = player1.web_name if player1_score > player2_score else player2.web_name
     message = f"I recommend \U0001F3C5{result}\U0001F3C5\n" \
-              + f"{player1.web_name.item()} score: {player1_score} \U0001F19A {player1.web_name.item()} score: {player1_score}\n" \
+              + f"{player1.web_name} score: {player1_score} \U0001F19A {player1.web_name} score: {player1_score}\n" \
               + message + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
