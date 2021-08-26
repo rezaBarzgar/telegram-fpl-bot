@@ -323,17 +323,17 @@ def coin_flip(update, context):
 
 def compare(update, context):
     try:
-        player1, player2 = ' '.join(context.args).split('-')
-        player1.strip()
-        player2.strip()
+        playerA, playerB = ' '.join(context.args).split('-')
+        playerA.strip()
+        playerB.strip()
     except Exception as e:
         message = "Invalid input:(\ntwo players must be divided by (-)\nFor example salah - fernandes\n" \
                   + CHANNEL_AND_BOT_ID
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
         return
 
-    player1 = STATS.loc[STATS.web_name.str.contains(player1)]
-    player2 = STATS.loc[STATS.web_name.str.contains(player2)]
+    player1 = STATS.loc[STATS.web_name.str.contains(playerA)]
+    player2 = STATS.loc[STATS.web_name.str.contains(playerB)]
     player1_score = 0
     player2_score = 0
     diff_dict = dict(sts.calculate_difficulties())
