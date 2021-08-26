@@ -80,6 +80,7 @@ SPLITTER = 30 * '~'
 
 
 class Statistics:
+
     def __init__(self):
         # COLORS ARE GREEN(1,2), YELLOW(3), RED(4) and BLACK(5)
         self.difficulties_color = {1: "\U0001F7E9", 2: "\U0001F7E9", 3: "\U0001F7E8", 4: "\U0001F7E5", 5: "\U00002B1B"}
