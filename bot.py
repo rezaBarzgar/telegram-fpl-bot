@@ -332,63 +332,61 @@ def compare(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
         return
 
-    player1 = STATS[STATS.web_name.str.contains(player1)].iloc[0]
-    player2 = STATS[STATS.web_name.str.contains(player2)].iloc[0]
-
-
+    player1 = STATS.loc[STATS.web_name.str.contains(player1)]
+    player2 = STATS.loc[STATS.web_name.str.contains(player2)]
     player1_score = 0
     player2_score = 0
     diff_dict = dict(sts.calculate_difficulties())
     message = ""
-    if float(player1.form) > float(player2.form):
+    if float(player1.form.item()) > float(player2.form.item()):
         message += f"Form: {player1.web_name}\n"
         player1_score += 5
-    elif float(player2.form) > float(player1.form):
+    elif float(player2.form.item()) > float(player1.form.item()):
         message += f"Form: {player2.web_name}\n"
         player2_score += 5
     else:
         message += "Form: equal\n"
 
-    if player1.goals_scored > player2.goals_scored:
+    if player1.goals_scored.item() > player2.goals_scored.item():
         message += f"Goals: {player1.web_name}\n"
-        player1_score += (player1.goals_scored - player2.goals_scored)
-    elif player2.goals_scored > player1.goals_scored:
+        player1_score += (player1.goals_scored.item() - player2.goals_scored.item())
+    elif player2.goals_scored.item() > player1.goals_scored.item():
         message += f"Goals: {player2.web_name}\n"
-        player2_score += (player2.goals_scored - player1.goals_scored)
+        player2_score += (player2.goals_scored.item() - player1.goals_scored.item())
     else:
         message += "Goals: equal\n"
 
-    if player1.assists > player2.assists:
+    if player1.assists.item() > player2.assists.item():
         message += f"Assists: {player1.web_name}\n"
-        player1_score += (player1.assists - player2.assists)
-    elif player2.assists > player1.assists:
+        player1_score += (player1.assists.item() - player2.assists.item())
+    elif player2.assists.item() > player1.assists.item():
         message += f"Assists: {player2.web_name}\n"
-        player2_score += (player2.assists - player1.assists)
+        player2_score += (player2.assists.item() - player1.assists.item())
     else:
         message += "Assists: equal\n"
 
-    if player1.ict_index_rank > player2.ict_index_rank:
+    if player1.ict_index_rank.item() > player2.ict_index_rank.item():
         message += f"ICT Rank: {player1.web_name}\n"
         player1_score += 2
-    elif player2.ict_index_rank > player1.ict_index_rank:
+    elif player2.ict_index_rank.item() > player1.ict_index_rank.item():
         message += f"ICT Rank: {player2.web_name}\n"
         player2_score += 2
     else:
         message += "ICT Rank: equal\n"
 
-    if player1.dreamteam_count > player2.dreamteam_count:
+    if player1.dreamteam_count.item() > player2.dreamteam_count.item():
         message += f"Dream Team Appearances: {player1.web_name}\n"
-        player1_score += (player1.dreamteam_count - player2.dreamteam_count)
-    elif player2.dreamteam_count > player1.dreamteam_count:
+        player1_score += (player1.dreamteam_count.item() - player2.dreamteam_count.item())
+    elif player2.dreamteam_count.item() > player1.dreamteam_count.item():
         message += f"Dream Team Appearances: {player2.web_name}\n"
-        player2_score += (player2.dreamteam_count - player1.dreamteam_count)
+        player2_score += (player2.dreamteam_count.item() - player1.dreamteam_count.item())
     else:
         message += "Dream Team Appearances: equal\n"
 
-    if float(diff_dict[player2.team.lower()]) > float(diff_dict[player1.team.lower()]):
+    if float(diff_dict[player2.team.item().lower()]) > float(diff_dict[player1.team.item().lower()]):
         message += f"next matches difficulties: {player1.web_name}\n"
         player1_score += 4
-    elif float(diff_dict[player1.team.lower()]) > float(diff_dict[player2.team.lower()]):
+    elif float(diff_dict[player1.team.item().lower()]) > float(diff_dict[player2.team.item().lower()]):
         message += f"next matches difficulties: {player2.web_name}\n"
         player2_score += 4
     else:
