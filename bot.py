@@ -34,7 +34,6 @@ def stats_updater(update='', context=''):
         global DEADLINE
         STATS = pd.DataFrame(sts.update_statistics())
         STATS['name'] = STATS['first_name'] + ' ' + STATS['second_name'] + ' ' + STATS['web_name']
-        STATS['web_name'] = STATS.web_name.str.lower()
         DEADLINE = sts.update_deadline()
         STATS['dreamteam_count'] = pd.to_numeric(STATS['dreamteam_count'])
         STATS['ep_next'] = pd.to_numeric(STATS['ep_next'])
@@ -333,8 +332,8 @@ def compare(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
         return
     try:
-        player1 = STATS[STATS.web_name.str.contains(player1)].iloc[0]
-        player2 = STATS[STATS.web_name.str.contains(player2)].iloc[0]
+        player1 = STATS[STATS.web_name == player1].iloc[0]
+        player2 = STATS[STATS.web_name == player2].iloc[0]
 
     except Exception as e:
         message = "unable to find one or both of the players :(\n" \
