@@ -331,15 +331,11 @@ def compare(update, context):
                   + CHANNEL_AND_BOT_ID
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
         return
-    try:
-        player1 = STATS[STATS.web_name == player1].iloc[0]
-        player2 = STATS[STATS.web_name == player2].iloc[0]
 
-    except Exception as e:
-        message = "unable to find one or both of the players :(\n" \
-                  + CHANNEL_AND_BOT_ID
-        context.bot.send_message(chat_id=update.effective_chat.id, text=message)
-        return
+    player1 = STATS[STATS.web_name.str.contains(player1)].iloc[0]
+    player2 = STATS[STATS.web_name.str.contains(player2)].iloc[0]
+
+
     player1_score = 0
     player2_score = 0
     diff_dict = dict(sts.calculate_difficulties())
