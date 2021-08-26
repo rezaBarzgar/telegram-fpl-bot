@@ -334,8 +334,8 @@ def compare(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
         return
 
-    player1 = STATS[STATS.web_name.str.contains(playerA)].loc[0]
-    player2 = STATS[STATS.web_name.str.contains(playerB)].loc[0]
+    player1 = STATS[STATS.web_name.str.contains(playerA)].iloc[0]
+    player2 = STATS[STATS.web_name.str.contains(playerB)].iloc[0]
     player1_score = 0
     player2_score = 0
     diff_dict = dict(sts.calculate_difficulties())
