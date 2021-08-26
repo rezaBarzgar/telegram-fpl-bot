@@ -86,6 +86,12 @@ def help(update, context):
 مثال: 
 /player salah
 ------------------------------------
+دستور: /compare
+ورودی: اسم بازیکن دو به انگلیسی که با (-) از هم جدا شده اند.
+خروجی: مقایسه بازیکنان
+مثال: 
+/compare mount - havertz
+------------------------------------
 دستور: /popular_players 
 ورودی: تعداد بازیکنان محبوب (اختیاری)
 خروجی: اطلاعات بازیکنان محبوب بر اساس درصد مالکیت
@@ -93,6 +99,14 @@ def help(update, context):
 /popular_players 10
 ------------------------------------
 دستور های /popular_forwards، /popular_midfielders، /popular_defenders و /popular_goalkeepers نیز مانند دستور بالا عمل میکنند برای پست های مختلف.
+------------------------------------
+دستور: /onfire_players 
+ورودی: تعداد بازیکنان روی فرم (اختیاری)
+خروجی: اطلاعات بازیکنان روی فرم
+مثال:
+/onfire_players 10
+------------------------------------
+دستور های / onfire_forwards، / onfire_midfielders، / onfire_defenders و / onfire_goalkeepers نیز مانند دستور بالا عمل میکنند برای پست های مختلف.
 ------------------------------------
 دستور: /next_games
 ورودی: اسم تیم
@@ -251,7 +265,6 @@ def popular_goalkeepers(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
 
-# ------------------------------DUP---------------------
 def onfire_players(update, context):
     if len(context.args) == 0:
         count = 5
