@@ -395,8 +395,8 @@ def compare(update, context):
         message += "next matches difficulties are equal\n"
 
     result = player1.web_name if player1_score > player2_score else player2.web_name
-    message = f"I recommend \U0001F3C5{result}\U0001F3C5\n" \
-              + f"{player1.web_name} score: {player1_score} \U0001F19A {player1.web_name} score: {player1_score}\n" \
+    message = f"I recommend \U0001F3C5**{result}**\U0001F3C5\n" \
+              + f"{player1.web_name} score: {player1_score} \U0001F19A {player2.web_name} score: {player2_score}\n" \
               + message + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
