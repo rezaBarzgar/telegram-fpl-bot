@@ -35,6 +35,8 @@ def stats_updater(update='', context=''):
     try:
         global STATS
         global DEADLINE
+        global CURRENT_GW
+        CURRENT_GW = sts.get_current_gw()
         STATS = pd.DataFrame(sts.update_statistics())
         STATS['name'] = STATS['first_name'] + ' ' + STATS['second_name'] + ' ' + STATS['web_name']
         DEADLINE = sts.update_deadline()
