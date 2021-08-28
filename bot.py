@@ -1,5 +1,6 @@
 import datetime
 
+import requests
 import telegram
 from telegram.ext import Updater, CommandHandler
 from telegram.ext import MessageHandler, Filters
@@ -14,6 +15,7 @@ sts = statistics.Statistics()
 teams_dict = sts.get_teams()
 for key, value in teams_dict.items():
     teams_dict[key] = value.lower()
+CURRENT_GW = sts.get_current_gw()
 TEAMS_TO_STRING = ''
 SPLITTER = 30 * '~'
 CHANNEL_AND_BOT_ID = '@FPL_TALK\n@FPL_TALK_BOT'
@@ -75,7 +77,8 @@ job_queue.run_repeating(callback=stats_updater, interval=1800, first=5.0)
 
 
 def hello(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="I'm FPL bot, talk to me!")
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="I'm FPL bot, talk to me!\nI recommend you to see /help")
 
 
 def help(update, context):
@@ -505,7 +508,35 @@ def compare(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
 
-#  -------------------- HANDLERS --------------------------------
+def team(update, context):
+    manager_id = int(''.join(context.args))
+    req = requests.get(f"https://fantasy.premierleague.com/api/entry/{manager_id}/")
+    data = req.json()
+    message = f"Manager: {data['player_first_name']} {data['player_last_name']}\n" + \
+              f"Team Name: {data['name']} - Overall Rank: {data['summary_overall_rank']}\n" + \
+              f"GW {CURRENT_GW} Team:\n"
+
+    if req.status_code != 200:
+        message = "Unable to Team with this ID :(\n" + CHANNEL_AND_BOT_ID
+        context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+        return
+    req = requests.get(f"https://fantasy.premierleague.com/api/entry/{manager_id}/event/{CURRENT_GW}/picks/")
+
+    players = req.json()['picks']
+    i = 0
+    for item in players:
+        message += STATS[STATS.id == item['element']].web_name.item() + ' - ' if item['is_captain'] == False else STATS[
+                                                                                                                      STATS.id ==
+                                                                                                                      item[
+                                                                                                                          'element']].web_name.item() + '(C)' + ' - '
+        i += 1
+        if i == 11:
+            message += "\n" + SPLITTER + "\n"
+    message = message[:-1] + '\n' + CHANNEL_AND_BOT_ID
+    context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+    # -------------------- HANDLERS --------------------------------
+
+
 player_stat_handler = CommandHandler('player', player_stats)
 dispatcher.add_handler(player_stat_handler)
 
@@ -559,6 +590,9 @@ dispatcher.add_handler(deadline_handler)
 
 compare_handler = CommandHandler('compare', compare)
 dispatcher.add_handler(compare_handler)
+
+team_handler = CommandHandler('team', team)
+dispatcher.add_handler(team_handler)
 
 start_handler = CommandHandler('start', hello)
 dispatcher.add_handler(start_handler)

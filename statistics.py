@@ -88,6 +88,7 @@ class Statistics:
                           'https://fantasy.premierleague.com/api/element-summary/',
                           'https://fantasy.premierleague.com/api/fixtures/']
         self.necessary_statistics = [
+            'id',
             'dreamteam_count',
             'element_type',
             'ep_next',
