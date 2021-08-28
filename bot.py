@@ -533,8 +533,9 @@ def team(update, context):
                                                                                                                           'element']].web_name.item() + '(C)' + ' - '
         i += 1
         if i == 11:
+            message = message[:-3]
             message += "\n" + SPLITTER + "\n"
-    message = message[:-1] + '\n' + CHANNEL_AND_BOT_ID
+    message = message[:-3] + '\n' + CHANNEL_AND_BOT_ID
     context.bot.send_message(chat_id=update.effective_chat.id, text=message)
     # -------------------- HANDLERS --------------------------------
 
