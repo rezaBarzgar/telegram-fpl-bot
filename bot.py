@@ -511,7 +511,13 @@ def compare(update, context):
 
 
 def team(update, context):
-    manager_id = int(''.join(context.args))
+    # TODO more user friendly
+    try:
+        manager_id = int(''.join(context.args))
+    except Exception as e:
+        message = "Possibly you have entered a wrong input\n" + CHANNEL_AND_BOT_ID
+        context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+        return
     req = requests.get(f"https://fantasy.premierleague.com/api/entry/{manager_id}/")
     data = req.json()
     message = f"Manager: {data['player_first_name']} {data['player_last_name']}\n" + \
